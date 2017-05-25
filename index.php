@@ -1,8 +1,7 @@
 <?php 
-session_start();
-
 define("__ROOT__", "/Users/alexey/Sites/lab5/");
 session_save_path(__ROOT__."/internal/sessions");
+session_start();
 
 
 $guest_type = "";

@@ -208,6 +208,13 @@ input[type="submit"] { cursor: pointer; }
 }
 
 .error {
+margin-top:20px;
 color: red;
 padding-top: 10px;
+}
+
+#login_btn {
+		float: right;
+	font-weight: bold;
+	margin-top: 20px;
 }

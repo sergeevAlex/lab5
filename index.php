@@ -2,17 +2,15 @@
 define("__ROOT__", "/Users/alexey/Sites/lab5/");
 session_save_path(__ROOT__."/internal/sessions");
 session_start();
-
-
+// echo session_id();
 $guest_type = "";
 $redirect_url = "";
 if($_SESSION["name"] != ''){
-//	echo "Session visible!";
+//if(session_id()){
 		$guest_type = "user";
 }
 else {
 		$guest_type = "guest";
-//		echo "Session invisible";
 }
 
 switch ($guest_type) {
@@ -23,7 +21,6 @@ switch ($guest_type) {
 		$redirect_url = "actions/login.php";
 		break;
 }
-
 header('Location: '.$redirect_url);
 exit();
 ?>

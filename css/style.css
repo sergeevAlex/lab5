@@ -34,7 +34,6 @@ input {
 }
 
 input[type="submit"] { cursor: pointer; }
-
 .clearfix { *zoom: 1; }
 .clearfix:before, .clearfix:after {
 	content: "";

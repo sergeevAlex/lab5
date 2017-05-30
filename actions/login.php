@@ -1,45 +1,27 @@
-<?php 
+<?php
 define("__ROOT__", "/Users/alexey/Sites/lab5/");
 session_save_path(__ROOT__."/internal/sessions");
-session_start();
 
-
-$this_user_exists = false;
-$user_doesnt_exists = "";
+// $this_user_exists = false;
+// $user_doesnt_exists = "";
 $wrong_login = "";
-require_once(__ROOT__."/utils/errors.php");
-require_once(__ROOT__."/utils/functions.php");
-
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
-
 $id = $_POST["login"];
 $pass = $_POST["password"];
-require_once(__ROOT__.'/internal/available-users.php');
-$list_users = get_array_of_users();
-for($i=0;$i<count($list_users);$i++){
-    if($list_users[$i] == $id){
-            $this_user_exists = true;
-    }
+$responce = file_get_contents("http://localhost/lab5/api.php?action=user&method=login&username=$id&password=$pass");
+$json_msg = json_decode($responce,true);
+if( $json_msg["answer"] == "successful_login" && $json_msg["error"] == "" ){
+    // session_id($json_msg["SSID"]);
+    session_start();
+    $_SESSION["name"] = $id;
+    header("Location: ../index.php");
+    exit();
+ }
+ else 
+{
+    $wrong_login = $json_msg["error"];
 }
-
-if($this_user_exists){
-    $data = file(__ROOT__."/internal/data/$id.txt");
-    list($password, $value) = explode('*', $data[0]);
-    if($pass == $password){
-        $_SESSION["name"] = $_POST["login"];
-        header("Location: ../index.php");
-        exit();
-    }
-    else{
-     $wrong_login = "Wrong password!";
-    }
 }
-
-else {
-    $wrong_login = "Wrong login!";
-    }
-}
-
 ?>
 <!DOCTYPE html>
 <html>
@@ -47,26 +29,19 @@ else {
 	<meta charset="UTF-8">
 	<title>Авторизация на сайте</title>
 	<link rel="stylesheet" href="../css/style.css" media="screen" type="text/css" />
-        <link rel="stylesheet" href="../css/bootstrap.css" media="screen" type="text/css" />   
-            <script src="../css/jquery.min.js"></script>
+    <link rel="stylesheet" href="../css/bootstrap.css" media="screen" type="text/css" />   
+    <script src="../css/jquery.min.js"></script>
 
 <script type="text/javascript">
-
-
 function validate_form()
 {
     valid = true;
         if ( document.login_form.login.value == "" || document.login_form.login.value == "Логин" || document.login_form.password.value == "" ||document.login_form.password.value == "Пароль")
         {
-
                 valid = false;
         }
-
         return valid;
 }
-
-
-
 </script>
 </head>
 <body>
@@ -76,9 +51,7 @@ function validate_form()
             <form name="login_form" onsubmit="return validate_form();" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]);?>" method="post">
                 <input type="login" required value="Логин" name="login" onBlur="if(this.value=='')this.value='Логин'" onFocus="if(this.value=='Логин')this.value='' ">
                 <input type="password" required value="Пароль" name="password" onBlur="if(this.value=='')this.value='Пароль'" onFocus="if(this.value=='Пароль')this.value='' ">
-
                 <button id="submit" class="btn btn-success" type="submit" style="float:right;margin-top:20px;" disabled="disabled">ВОЙТИ</button>
-
                 <script type="text/javascript">
 $(document).ready(function() {
     $('form > input').keyup(function() {
@@ -88,7 +61,6 @@ $(document).ready(function() {
                 empty = true;
             }
         });
-
         if (empty) {
             $('#submit').attr('disabled', 'disabled');
         } else {
@@ -96,8 +68,6 @@ $(document).ready(function() {
         }
     });
 })
-
-
 </script>
                 <span class="error"> <br><br><?php echo $wrong_login;?></span>
             </form>
@@ -105,9 +75,3 @@ $(document).ready(function() {
     </div>
 </body>
 </html>
-
-<?php 
-session_start();
-session_destroy();
-
-?>

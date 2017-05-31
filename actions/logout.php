@@ -1,23 +1,13 @@
 <?php 
 session_start();
 $ssid = session_id();
-//var_dump($ssid);
+// $ssid = $_SESSION["ssid"];
+// echo $ssid;
 $responce_logout = file_get_contents("http://localhost/lab5/api.php?action=user&method=logout&ssid=$ssid");
 $json_msg = json_decode($responce_logout,true);
-// var_dump($json_msg);
+//var_dump($json_msg);
 if($json_msg["answer"] == "Successful" && $json_msg["error"] == ""){
 	header('Location: ../index.php');
     exit();
 }
-
-
-// var_dump($json_msg);	
-// 	//header('Location: ../index.php');
-// 	//exit();
-// define("__ROOT__", "/Users/alexey/Sites/lab5/");
-
-
-//    //unlink(__ROOT__."/internal/session/sess_".$ssid);
-// header('Location: ../index.php');
-// exit();
 ?>

@@ -1,22 +1,21 @@
 <?php
 define("__ROOT__", "/Users/alexey/Sites/lab5/");
 session_save_path(__ROOT__."/internal/sessions");
-
-// $this_user_exists = false;
-// $user_doesnt_exists = "";
 $wrong_login = "";
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
 $id = $_POST["login"];
 $pass = $_POST["password"];
 $responce = file_get_contents("http://localhost/lab5/api.php?action=user&method=login&username=$id&password=$pass");
 $json_msg = json_decode($responce,true);
-if( $json_msg["answer"] == "successful_login" && $json_msg["error"] == "" ){
-    // session_id($json_msg["SSID"]);
+if($json_msg["error"] == ""){
+    session_id($json_msg["answer"]);
     session_start();
     $_SESSION["name"] = $id;
+        $_SESSION["ssid"] = $json_msg["answer"];
+
     header("Location: ../index.php");
     exit();
- }
+}
  else 
 {
     $wrong_login = $json_msg["error"];

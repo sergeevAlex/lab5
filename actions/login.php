@@ -8,12 +8,11 @@ $pass = $_POST["password"];
 $responce = file_get_contents("http://localhost/lab5/api.php?action=user&method=login&username=$id&password=$pass");
 $json_msg = json_decode($responce,true);
 if($json_msg["error"] == ""){
-    session_id($json_msg["answer"]);
-    session_start();
-    $_SESSION["name"] = $id;
-        $_SESSION["ssid"] = $json_msg["answer"];
-
-    header("Location: ../index.php");
+setcookie('ssid', $json_msg["answer"],time() + 3600,"/",'localhost');
+session_id($json_msg["answer"]);
+session_start();
+$_SESSION['name'] = $id;
+header("Location: ../index.php");
     exit();
 }
  else 
@@ -52,13 +51,13 @@ function validate_form()
                 <input type="password" required value="Пароль" name="password" onBlur="if(this.value=='')this.value='Пароль'" onFocus="if(this.value=='Пароль')this.value='' ">
                 <button id="submit" class="btn btn-success" type="submit" style="float:right;margin-top:20px;" disabled="disabled">ВОЙТИ</button>
                 <script type="text/javascript">
-$(document).ready(function() {
-    $('form > input').keyup(function() {
-        var empty = false;
-        $('form > input').each(function() {
-            if ($(this).val() == '' || $(this).val() == 'Логин' || $(this).val() == 'Пароль') {
-                empty = true;
-            }
+                $(document).ready(function() {
+                $('form > input').keyup(function() {
+                var empty = false;
+                $('form > input').each(function() {
+                if ($(this).val() == '' || $(this).val() == 'Логин' || $(this).val() == 'Пароль') {
+                    empty = true;
+                 }
         });
         if (empty) {
             $('#submit').attr('disabled', 'disabled');

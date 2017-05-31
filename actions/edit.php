@@ -1,12 +1,14 @@
 <?php 
 define("__ROOT__", "/Users/alexey/Sites/lab5/");
 session_save_path(__ROOT__."/internal/sessions");
-session_start();
 
-if($_SESSION["name"] == ''){
+
+if(!isset($_COOKIE["ssid"])){
         header("Location: ../index.php");
         exit();
 }
+session_id($_COOKIE['ssid']);
+session_start();
 $name = $_SESSION['name'];
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
 $new_text = array('text' =>  $_POST["code"]);

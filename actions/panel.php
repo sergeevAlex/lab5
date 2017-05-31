@@ -1,13 +1,19 @@
 <?php  
 define("__ROOT__", "/Users/alexey/Sites/lab5/");
 session_save_path(__ROOT__."/internal/sessions");
-session_start();
-if($_SESSION["name"] == ''){
+
+// var_dump($_COOKIE);
+// var_dump($_SESSION);
+if(!isset($_COOKIE["ssid"])){
         header("Location: ../index.php");
         exit();
 }
+// var_dump($_COOKIE);
+session_id($_COOKIE['ssid']);
+session_start();
 $name = $_SESSION['name'];
 ?>
+
 <!DOCTYPE html>
 <html>
 <head>
@@ -16,11 +22,8 @@ $name = $_SESSION['name'];
 	<link rel="stylesheet" href="../css/style.css" media="screen" type="text/css" />   
     <link rel="stylesheet" href="../css/bootstrap.css" media="screen" type="text/css" />   
     <script src="../css/jquery.min.js"></script>
-
 </head>
 <body>
-
-
     <div id="text-block">
     <h1>Добро пожаловать <div id="user_login"><?php echo $name;?></span> </h1>
             <fieldset>
@@ -45,7 +48,6 @@ xhr_etra.open('GET', "http://localhost/lab5/api.php?action=data&method=get&limit
 xhr_etra.send();
 var data_extra = JSON.parse(xhr_etra.responseText);
 var text_extra = document.createTextNode(data_extra["text: "]);
-//text.appendChild(text_extra);
 text.innerText += data_extra["text: "];
 }
 var button = document.getElementById('extra');

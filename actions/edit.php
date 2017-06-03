@@ -1,25 +1,24 @@
 <?php 
 define("__ROOT__", "/Users/alexey/Sites/lab5/");
-session_save_path(__ROOT__."/internal/sessions");
+require_once(__ROOT__."/utils/functions.php");
 
+session_start();
 
-if(!isset($_COOKIE["ssid"])){
+if(!isset($_SESSION['name'])){
         header("Location: ../index.php");
         exit();
 }
-session_id($_COOKIE['ssid']);
-session_start();
 $name = $_SESSION['name'];
+$ssid = session_id();
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
-$new_text = array('text' =>  $_POST["code"]);
+$new_text = array('text' =>$_POST["code"]);
 $great_url = http_build_query($new_text);
-$sadas = urldecode($great_url);
-$request_set = file_get_contents("http://localhost/lab5/api.php?action=data&method=set&name=$name&text=$great_url");
+$last_url = substr($great_url, 5);
+$response =  file_get_contents("http://localhost/lab4/api.php?action=data&method=set&sessionid=$ssid&text=$last_url");
 header("Location: ../index.php");
         exit();
 }
 ?>
-
 <!DOCTYPE html>
 <html>
 <head>
@@ -34,17 +33,15 @@ header("Location: ../index.php");
             <fieldset>
             <form method="post">
             <textarea name="code" id="text" style="margin-left: 0px; margin-right: 0px; width: 548px;height: 190px;font-size: 12pt;display: block;"><?php 
-                $request_get = file_get_contents("http://localhost/lab5/api.php?action=data&method=get&name=$name");
-                $jmsg = json_decode($request_get,true);
-                if($jmsg["error"] == ""){
-                $checked = htmlspecialchars($jmsg["text: "]);
-                echo $checked; 
-                }       
+                $ssid = session_id();
+                $getter =  api_request("data","get","sessionid=$ssid");
+                echo $getter["answer"];
                 ?>
 </textarea> 
 <center><button class="btn btn-success" type="submit">Сохранить</button></center>
                 </form>
             </fieldset>
+
         <a href="logout.php"><button class="btn btn-danger">LOGout</button></a>
     </div>
 </body>

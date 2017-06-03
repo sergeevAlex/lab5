@@ -1,12 +1,11 @@
 <?php 
 define("__ROOT__", "/Users/alexey/Sites/lab5/");
-// session_save_path(__ROOT__."/internal/sessions");
+require_once(__ROOT__."/utils/functions.php");
 session_start();
-// var_dump( $_COOKIE["ssid"]);
 $guest_type = "";
 $redirect_url = "";
 
-if(isset($_COOKIE["ssid"])){
+if(isset($_SESSION['name'])){
 			$guest_type = "user";
 }
 else {
@@ -20,14 +19,6 @@ switch ($guest_type) {
 		$redirect_url = "actions/login.php";
 		break;
 }
-		// session_destroy();
-        // $cookies = explode(';', $_SERVER['HTTP_COOKIE']);
-        // foreach($cookies as $cookie) {
-        //     $parts = explode('=', $cookie);
-        //     $name = trim($parts[0]);
-        //     setcookie($name, '', time()-1000);
-        //     setcookie($name, '', time()-1000, '/');
-        // }
-header('Location: '.$redirect_url);
+		header('Location: '.$redirect_url);
 exit();
 ?>

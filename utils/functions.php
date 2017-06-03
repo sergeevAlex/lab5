@@ -1,6 +1,8 @@
 <?php
 
 const ERROR_MSG = "error";
+const API_URL = "http://localhost/lab4/api.php";
+
 
 function test_input($data) {
   $data = trim($data);
@@ -44,5 +46,13 @@ function successful($message){
 		exit();
 
 }
+
+
+function api_request($action, $method, $params) {
+
+	$url = API_URL . "?action=$action&method=$method&$params";
+	$response_string = file_get_contents($url);
+	$decoded = json_decode($response_string,true);
+	return $decoded;}
 
 ?>

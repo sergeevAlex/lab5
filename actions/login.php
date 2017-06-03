@@ -1,21 +1,20 @@
 <?php
 define("__ROOT__", "/Users/alexey/Sites/lab5/");
-session_save_path(__ROOT__."/internal/sessions");
+require_once(__ROOT__."/utils/functions.php");
 $wrong_login = "";
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
 $id = $_POST["login"];
 $pass = $_POST["password"];
-$responce = file_get_contents("http://localhost/lab5/api.php?action=user&method=login&username=$id&password=$pass");
-$json_msg = json_decode($responce,true);
+$json_msg = api_request("user","login","id=$id&pass=$pass");
 if($json_msg["error"] == ""){
-setcookie('ssid', $json_msg["answer"],time() + 3600,"/",'localhost');
 session_id($json_msg["answer"]);
 session_start();
 $_SESSION['name'] = $id;
+
 header("Location: ../index.php");
     exit();
 }
- else 
+else 
 {
     $wrong_login = $json_msg["error"];
 }
@@ -29,7 +28,6 @@ header("Location: ../index.php");
 	<link rel="stylesheet" href="../css/style.css" media="screen" type="text/css" />
     <link rel="stylesheet" href="../css/bootstrap.css" media="screen" type="text/css" />   
     <script src="../css/jquery.min.js"></script>
-
 <script type="text/javascript">
 function validate_form()
 {
